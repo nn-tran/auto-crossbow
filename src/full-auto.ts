@@ -1,6 +1,6 @@
 import { once, hooks, Game, Actor, Debug, Utility, Input, GlobalVariable, printConsole } from "skyrimPlatform"
 import * as st from "PapyrusUtil/StorageUtil"
-import { createFunctionIfEquip } from "util"
+import { createFunctionIfEquip, saveCurrentAmmo } from "util"
 
 var idShoot: number = -1;
 var idReload: number = -1;
@@ -16,7 +16,9 @@ function addHooks(){
 	if (glob) ammo = glob.getValue();
 	const glob2 = GlobalVariable.from(Game.getFormFromFile(0x804, "autocrossbow.esm"))
 	if (glob2) rof = glob2.getValue();
-  currentAmmo = ammo;
+  const glob4 = GlobalVariable.from(Game.getFormFromFile(0x806, "autocrossbow.esm"))
+	if (glob4) currentAmmo = glob4.getValue();
+  else currentAmmo = ammo;
 	idShoot = hooks.sendAnimationEvent.add({
 		enter(ctx) {
       if (currentAmmo <=0){
@@ -51,13 +53,17 @@ function addHooks(){
         ctx.animEventName = "reloadStart";
       }
     },
-		leave(ctx) {}
+		leave(ctx) {
+      saveCurrentAmmo(currentAmmo);
+    }
 	}, /* minSelfId = */ 0x14, /* maxSelfId = */ 0x14, /*eventPattern = */ "attackRelease");
   idCancel = hooks.sendAnimationEvent.add({
     enter(ctx) {
       firing = false;
     },
-		leave(ctx) {}
+		leave(ctx) {
+      saveCurrentAmmo(currentAmmo);
+    }
 	}, /* minSelfId = */ 0x14, /* maxSelfId = */ 0x14, /*eventPattern = */ "attackStop");
 }
 

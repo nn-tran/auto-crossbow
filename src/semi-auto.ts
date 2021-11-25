@@ -1,5 +1,5 @@
 import { once, hooks, Game, Actor, Weapon, Debug, Utility, printConsole, GlobalVariable } from "skyrimPlatform"
-import { createFunctionIfEquip } from "util"
+import { createFunctionIfEquip, saveCurrentAmmo } from "util"
 
 var idShoot: number = -1;
 var idReload: number = -1;
@@ -12,7 +12,9 @@ var firing = false;
 function init(pl: Actor | null, w: Weapon){
 	const glob = GlobalVariable.from(Game.getFormFromFile(0x803, "autocrossbow.esm"))
 	if (glob) ammo = glob.getValue();
-	currentAmmo = ammo;
+  const glob4 = GlobalVariable.from(Game.getFormFromFile(0x806, "autocrossbow.esm"))
+	if (glob4) currentAmmo = glob4.getValue();
+  else currentAmmo = ammo;
 	idShoot = hooks.sendAnimationEvent.add({
 		enter(ctx) {
       firing = true;
@@ -43,13 +45,17 @@ function init(pl: Actor | null, w: Weapon){
 			}
 			
 		},
-		leave(ctx) {}
+		leave(ctx) {
+			saveCurrentAmmo(currentAmmo);
+		}
 	}, /* minSelfId = */ 0x14, /* maxSelfId = */ 0x14, /*eventPattern = */ "attackRelease");
 	idCancel = hooks.sendAnimationEvent.add({
     enter(ctx) {
       firing = false;
     },
-		leave(ctx) {}
+		leave(ctx) {
+			saveCurrentAmmo(currentAmmo);
+		}
 	}, /* minSelfId = */ 0x14, /* maxSelfId = */ 0x14, /*eventPattern = */ "attackStop");
 }
 

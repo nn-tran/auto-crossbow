@@ -1,4 +1,11 @@
-import { on, once, Game, Actor, Weapon, Keyword, Debug, Utility, printConsole} from "skyrimPlatform"
+import { on, once, Game, Actor, Weapon, Keyword, Debug, Utility, GlobalVariable, printConsole} from "skyrimPlatform"
+
+export function saveCurrentAmmo(currentAmmo: number){
+  once('update', ()=>{
+    const cAmmo = GlobalVariable.from(Game.getFormFromFile(0x806, "autocrossbow.esm"))
+    cAmmo?.setValue(currentAmmo)
+  });
+}
 
 export function createFunctionIfEquip(init: (pl: Actor | null, w: Weapon)=>void, equip: (pl: Actor | null, w: Weapon)=>void, unequip: (pl: Actor | null)=>void, id: number, file: string): ()=>void{
   return ()=>{
