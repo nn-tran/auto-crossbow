@@ -1,5 +1,4 @@
-import { once, hooks, Game, Actor, Debug, Utility, Input, GlobalVariable, printConsole } from "skyrimPlatform"
-import * as st from "PapyrusUtil/StorageUtil"
+import { once, hooks, Game, Actor, Debug, Utility, Input, GlobalVariable } from "skyrimPlatform"
 import { createFunctionIfEquip, saveCurrentAmmo } from "util"
 
 var idShoot: number = -1;

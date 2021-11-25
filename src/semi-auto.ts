@@ -1,4 +1,4 @@
-import { once, hooks, Game, Actor, Weapon, Debug, Utility, printConsole, GlobalVariable } from "skyrimPlatform"
+import { once, hooks, Game, Actor, Debug, Utility, GlobalVariable } from "skyrimPlatform"
 import { createFunctionIfEquip, saveCurrentAmmo } from "util"
 
 var idShoot: number = -1;
@@ -9,7 +9,7 @@ var currentAmmo: number;
 var reloading = false;
 var firing = false;
 
-function init(pl: Actor | null, w: Weapon){
+function init(){
 	const glob = GlobalVariable.from(Game.getFormFromFile(0x803, "autocrossbow.esm"))
 	if (glob) ammo = glob.getValue();
   const glob4 = GlobalVariable.from(Game.getFormFromFile(0x806, "autocrossbow.esm"))
@@ -59,12 +59,12 @@ function init(pl: Actor | null, w: Weapon){
 	}, /* minSelfId = */ 0x14, /* maxSelfId = */ 0x14, /*eventPattern = */ "attackStop");
 }
 
-function equip(pl: Actor | null, w: Weapon){
+function equip(){
 	if (idShoot < 0)
-		init(pl, w);
+		init();
 }
 
-function unequip(pl: Actor | null){
+function unequip(){
 	if (idShoot >= 0){
 		hooks.sendAnimationEvent.remove(idShoot);
 		idShoot = -1;
