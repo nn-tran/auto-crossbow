@@ -1,0 +1,18 @@
+{
+    "compilerOptions": {
+        "alwaysStrict": true,
+        "noImplicitAny": true,
+        "noImplicitThis": true,
+        "strict": true,
+        "module": "System",
+        "target": "ES5",
+        "outFile": "./dist/auto-crossbow.js",
+        "lib": [
+            "ES2015"
+        ],
+        "paths": {
+            "chai": ["./node_modules/@types/chai"]
+        }
+    },
+    "include": ["./*.ts"]   
+}
