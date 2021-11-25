@@ -16,7 +16,7 @@ export function createFunctionIfEquip(init: (pl: Actor | null, w: Weapon)=>void,
       const plId = event.actor.getFormID();
       if (plId !== Game.getFormEx(0x14)?.getFormID()) return;
       const wId = event.baseObj.getFormID();
-      Utility.wait(0.5).then(() => {//wait for unequip event and equip animation to finish
+      Utility.waitMenuMode(0.1).then(() => {//wait for unequip event and equip animation to finish
         const pl = Actor.from(Game.getFormEx(0x14));
         const kw = Keyword.from(Game.getFormFromFile(id, file));
         const w = Weapon.from(Game.getFormEx(wId));
