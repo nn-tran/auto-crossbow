@@ -9,7 +9,9 @@ var currentAmmo: number;
 var reloading = false;
 var firing = false;
 
-function init(){
+function addHooks(){
+	if (idShoot >= 0)
+    return;
 	const glob = GlobalVariable.from(Game.getFormFromFile(0x803, "autocrossbow.esm"))
 	if (glob) ammo = glob.getValue();
   const glob4 = GlobalVariable.from(Game.getFormFromFile(0x806, "autocrossbow.esm"))
@@ -59,12 +61,7 @@ function init(){
 	}, /* minSelfId = */ 0x14, /* maxSelfId = */ 0x14, /*eventPattern = */ "attackStop");
 }
 
-function equip(){
-	if (idShoot < 0)
-		init();
-}
-
-function unequip(){
+function removeHooks(){
 	if (idShoot >= 0){
 		hooks.sendAnimationEvent.remove(idShoot);
 		idShoot = -1;
@@ -75,4 +72,4 @@ function unequip(){
 	}
 }
 
-export const main = createFunctionIfEquip(init, equip, unequip, 0x801, "autocrossbow.esm");
+export const main = createFunctionIfEquip(addHooks, removeHooks, 0x801, "autocrossbow.esm");

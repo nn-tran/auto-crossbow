@@ -7,16 +7,16 @@ export function saveCurrentAmmo(currentAmmo: number){
   });
 }
 
-export function createFunctionIfEquip(init: (pl: Actor | null, w: Weapon)=>void, equip: (pl: Actor | null, w: Weapon)=>void, unequip: (pl: Actor | null)=>void, id: number, file: string): ()=>void{
+export function createFunctionIfEquip(equip: ()=>void, unequip: ()=>void, id: number, file: string): ()=>void{
   return ()=>{
     var itemId: number = -1;
-    once('scriptInit', () => {
+    on('loadGame', () => {
       const pl = Actor.from(Game.getFormEx(0x14));
       const kw = Keyword.from(Game.getFormFromFile(id, file));
       const w = pl?.getEquippedWeapon(false);
       if (itemId < 0 && w?.hasKeyword(kw)){
         itemId = w.getFormID();
-        init(pl, w);
+        equip();
       }
     });
     on('equip', (event) => {
@@ -29,17 +29,15 @@ export function createFunctionIfEquip(init: (pl: Actor | null, w: Weapon)=>void,
         const w = Weapon.from(Game.getFormEx(wId));
         if (itemId < 0 && w?.hasKeyword(kw)) {
           itemId = w.getFormID();
-          equip(pl, w);
+          equip();
         }
-        
       });
     });
-
     on('unequip', (event) => {
       const pl = Actor.from(event.actor);
       if (!pl || pl.getFormID() !== Game.getFormEx(0x14)?.getFormID()) return;
       if (event.baseObj.getFormID() === itemId){
-        unequip(pl);
+        unequip();
         itemId = -1;
       }
     });
